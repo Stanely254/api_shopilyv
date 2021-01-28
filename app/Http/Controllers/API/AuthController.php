@@ -12,7 +12,7 @@ use App\Models\User;
 use App\Models\ShopiStores;
 use App\Models\Stores;
 use App\Models\UserGroups;
-use Brick\Math\BigDecimal;
+use App\Models\UserPlans;
 use Brick\Math\BigInteger;
 use Illuminate\Support\Facades\Hash;
 
@@ -120,13 +120,13 @@ class AuthController extends Controller
     {
         $industry_code = $this->get_industry_code($industry);
         $validatedData = $request->validate([
-            'company_id' => $company_id, 
-            'activation_code' => $activationCode, 
+            'company_id' => $company_id,
+            'activation_code' => $activationCode,
             'active' => $active,
             'verification_status' => $verificatio_status,
             'user_otp' => md5(rand()),
             'industry' => $industry_code,
-            'user_id'=> $user_id, 
+            'user_id' => $user_id,
             'wheretosell' => $station,
             'salesestimation' => $estimation,
             'terms_agreement' => $terms
@@ -137,7 +137,8 @@ class AuthController extends Controller
         return response(['custShopi' => $custShopi, 'message' => 'Create Successful'], 201);
     }
 
-    protected function insert_groups(Request $request, String $group_name, String $company_id){
+    protected function insert_groups(Request $request, String $group_name, String $company_id)
+    {
         $validatedData = $request->validate([
             'group_name' => $group_name,
             'company_id' => $company_id
@@ -147,7 +148,8 @@ class AuthController extends Controller
         return response(['groups' => $groups, 'message' => 'Created Successful'], 201);
     }
 
-    protected function insert_user_groups(Request $request, int $user_id, int $group_id, String $company_id){
+    protected function insert_user_groups(Request $request, int $user_id, int $group_id, String $company_id)
+    {
         $validatedData = $request->validate([
             'user_id' => $user_id,
             'group_id' => $group_id,
@@ -158,7 +160,8 @@ class AuthController extends Controller
         return response(['user_groups' => $user_groups, 'message' => 'Created Successful'], 201);
     }
 
-    protected function insert_default_industry(Request $request, String $name, String $company_id){
+    protected function insert_default_industry(Request $request, String $name, String $company_id)
+    {
         $validatedData = $request->validate([
             'name' => $name,
             'company_id' => $company_id,
@@ -169,7 +172,8 @@ class AuthController extends Controller
         return response(['categories' => $categories, 'message' => 'Created Successful'], 201);
     }
 
-    protected function insert_default_brand(Request $request, STring $brand, String $company_id){
+    protected function insert_default_brand(Request $request, STring $brand, String $company_id)
+    {
         $validatedData = $request->validate([
             'name' => $brand,
             'active' => 1,
@@ -181,10 +185,18 @@ class AuthController extends Controller
         return response(['brands' => $brands, 'message' => 'Created Successful'], 201);
     }
 
-    protected function insert_user_plans(Request $request){
-        $time = time() + 60 * 60 * 24 * 30;
+    protected function insert_user_plans(Request $request, BigInteger $company_id, int $starter, int $starter_status)
+    {
+        $start = time();
+        $end = time() + 60 * 60 * 24 * 30;;
         $validatedData = $request->validate([
-            ''
+            'company_id' => $company_id,
+            'starter' => $starter,
+            'starter_start_date' => $start,
+            'starter_end_date' => $end
         ]);
+
+        $user_plans = UserPlans::create($validatedData);
+        return response(['user_plans' => $user_plans, 'message' => 'Created Successfully'], 201);
     }
 }
