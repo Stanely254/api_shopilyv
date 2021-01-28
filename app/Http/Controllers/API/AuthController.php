@@ -206,7 +206,6 @@ class AuthController extends Controller
         $password = "WorthBill2030$";
 
         $auth = base64_encode($username . ":" . $password);
-        $headers = ['Authorization' => 'Basic ' . $auth, 'Content-Type' => ' application/json', 'Accept' => 'application/json',];
         $api_url = 'https://api.infobip.com/sms/2/text/single';
         $curl = curl_init();
         curl_setopt_array($curl, array(
